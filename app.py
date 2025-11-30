@@ -301,68 +301,39 @@ with col3:
 
 # Contact Section
 st.markdown("---")
-contact_form = """
-    <div class="contact-section">
-        <div style="text-align: center; margin-bottom: 3rem;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 400;">
-                Napište mi o spolupráci
-            </h2>
-            <p style="font-size: 1.125rem; opacity: 0.7; font-weight: 300;">
-                Pojďme společně vytvořit něco výjimečného.
-            </p>
-        </div>
-    </div>
-    
-    <form action="https://formspree.io/f/mpwvwwbj" method="POST" style="max-width: 600px; margin: 0 auto;">
-        <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;">
-                Jméno
-            </label>
-            <input 
-                type="text" 
-                name="name" 
-                required 
-                placeholder="Vaše jméno"
-                style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box;"
-            >
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;">
-                Email
-            </label>
-            <input 
-                type="email" 
-                name="email" 
-                required 
-                placeholder="vas@email.cz"
-                style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box;"
-            >
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;">
-                Zpráva
-            </label>
-            <textarea 
-                name="message" 
-                required 
-                rows="6"
-                placeholder="Popište mi váš projekt nebo dotaz..."
-                style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box; resize: vertical;"
-            ></textarea>
-        </div>
-        
-        <button 
-            type="submit"
-            style="width: 100%; background-color: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); padding: 1.25rem 2rem; color: #d4af37; font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.875rem; cursor: pointer; transition: all 0.3s; border-radius: 0;"
-            onmouseover="this.style.backgroundColor='rgba(212, 175, 55, 0.2)'"
-            onmouseout="this.style.backgroundColor='rgba(212, 175, 55, 0.1)'"
-        >
-            Odeslat zprávu
-        </button>
-    </form>
-"""
+contact_form = """<div class="contact-section">
+<div style="text-align: center; margin-bottom: 3rem;">
+<h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 400; font-family: 'Playfair Display', serif; color: #e5e5e5;">
+Napište mi o spolupráci
+</h2>
+<p style="font-size: 1.125rem; opacity: 0.7; font-weight: 300; color: #e5e5e5;">
+Pojďme společně vytvořit něco výjimečného.
+</p>
+</div>
+<form action="https://formspree.io/f/mpwvwwbj" method="POST" style="max-width: 600px; margin: 0 auto;">
+<div style="margin-bottom: 1.5rem;">
+<label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; color: #e5e5e5;">
+Jméno
+</label>
+<input type="text" name="name" required placeholder="Vaše jméno" style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box;">
+</div>
+<div style="margin-bottom: 1.5rem;">
+<label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; color: #e5e5e5;">
+Email
+</label>
+<input type="email" name="email" required placeholder="vas@email.cz" style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box;">
+</div>
+<div style="margin-bottom: 1.5rem;">
+<label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; color: #e5e5e5;">
+Zpráva
+</label>
+<textarea name="message" required rows="6" placeholder="Popište mi váš projekt nebo dotaz..." style="width: 100%; background-color: #111111; border: 1px solid rgba(229, 229, 229, 0.2); padding: 1rem 1.5rem; color: #e5e5e5; font-family: 'Inter', sans-serif; font-weight: 300; border-radius: 0; box-sizing: border-box; resize: vertical;"></textarea>
+</div>
+<button type="submit" style="width: 100%; background-color: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); padding: 1.25rem 2rem; color: #d4af37; font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.875rem; cursor: pointer; transition: all 0.3s; border-radius: 0;" onmouseover="this.style.backgroundColor='rgba(212, 175, 55, 0.2)'" onmouseout="this.style.backgroundColor='rgba(212, 175, 55, 0.1)'">
+Odeslat zprávu
+</button>
+</form>
+</div>"""
 st.markdown(contact_form, unsafe_allow_html=True)
 
 # Footer
