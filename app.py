@@ -14,7 +14,8 @@ st.set_page_config(
 # Custom CSS - převzatý luxusní tmavý styl z index.html
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
@@ -120,22 +121,16 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize session state
-if 'api_key' not in st.session_state:
-    st.session_state.api_key = ''
 if 'cover_letter' not in st.session_state:
     st.session_state.cover_letter = ''
 
-# Sidebar - API Key input
+# Load API key from Streamlit Secrets
+api_key = st.secrets["GOOGLE_API_KEY"]
+
+# Sidebar
 with st.sidebar:
     st.markdown("### KESSY YAKO")
     st.markdown("---")
-    api_key = st.text_input(
-        "Google API Key",
-        type="password",
-        value=st.session_state.api_key,
-        help="Zadejte svůj Google Gemini API klíč"
-    )
-    st.session_state.api_key = api_key
 
 # Main content
 st.markdown("""
@@ -178,8 +173,8 @@ generate_button = st.button(
 
 # Generate cover letter
 if generate_button:
-    if not st.session_state.api_key:
-        st.error("⚠️ Prosím, zadejte Google API Key v sidebaru.")
+    if not api_key:
+        st.error("⚠️ API klíč není nastaven. Zkontrolujte Streamlit Secrets.")
     elif not job_ad.strip():
         st.error("⚠️ Prosím, vložte text inzerátu práce.")
     elif uploaded_file is None:
@@ -198,7 +193,7 @@ if generate_button:
                     st.error("⚠️ Nepodařilo se přečíst text z PDF. Zkontrolujte, zda je soubor správně formátovaný.")
                 else:
                     # Configure Gemini
-                    genai.configure(api_key=st.session_state.api_key)
+                    genai.configure(api_key=api_key)
                     
                     try:
                         # Získat seznam všech dostupných modelů pro tento klíč
@@ -274,7 +269,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""
         <div class="service-card">
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #d4af37;">Webdesign & UI</h3>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #D4AF37; font-family: 'Playfair Display', serif;">Webdesign & UI</h3>
             <p style="opacity: 0.7; margin-bottom: 0.5rem; font-weight: 300;">Vizuální identita</p>
             <p style="opacity: 0.6; font-size: 0.875rem; font-weight: 300; line-height: 1.6;">
                 Vytváříme digitální zážitky, které oslovují a zanechávají trvalý dojem.
@@ -285,7 +280,7 @@ with col1:
 with col2:
     st.markdown("""
         <div class="service-card">
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #d4af37;">Development</h3>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #D4AF37; font-family: 'Playfair Display', serif;">Development</h3>
             <p style="opacity: 0.7; margin-bottom: 0.5rem; font-weight: 300;">Technická preciznost</p>
             <p style="opacity: 0.6; font-size: 0.875rem; font-weight: 300; line-height: 1.6;">
                 Stavíme na solidních základech s důrazem na výkon a škálovatelnost.
@@ -296,7 +291,7 @@ with col2:
 with col3:
     st.markdown("""
         <div class="service-card">
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #d4af37;">AI Aplikace</h3>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: #D4AF37; font-family: 'Playfair Display', serif;">AI Aplikace</h3>
             <p style="opacity: 0.7; margin-bottom: 0.5rem; font-weight: 300;">Automatizace procesů</p>
             <p style="opacity: 0.6; font-size: 0.875rem; font-weight: 300; line-height: 1.6;">
                 Integrujeme umělou inteligenci do vašeho podnikání pro efektivnější workflow.
@@ -306,7 +301,7 @@ with col3:
 
 # Contact Section
 st.markdown("---")
-st.markdown("""
+contact_form = """
     <div class="contact-section">
         <div style="text-align: center; margin-bottom: 3rem;">
             <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 400;">
@@ -317,10 +312,7 @@ st.markdown("""
             </p>
         </div>
     </div>
-""", unsafe_allow_html=True)
-
-# Contact form (using HTML form for Formspree)
-st.markdown("""
+    
     <form action="https://formspree.io/f/mpwvwwbj" method="POST" style="max-width: 600px; margin: 0 auto;">
         <div style="margin-bottom: 1.5rem;">
             <label style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;">
@@ -370,7 +362,8 @@ st.markdown("""
             Odeslat zprávu
         </button>
     </form>
-""", unsafe_allow_html=True)
+"""
+st.markdown(contact_form, unsafe_allow_html=True)
 
 # Footer
 st.markdown("""
