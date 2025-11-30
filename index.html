@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html lang="cs" class="scroll-smooth">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kessy Yako Studio - AI CV Generátor & Web Development</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        
+
+        body {
+
+            font-family: 'Inter', sans-serif;
+
+            background-color: #0a0a0a;
+
+            color: #e5e5e5;
+
+            overflow-x: hidden;
+
+        }
+
+        
+
+        h1, h2, h3 {
+
+            font-family: 'Playfair Display', serif;
+
+            font-weight: 400;
+
+        }
+
+        
+
+        .fade-in {
+
+            opacity: 0;
+
+            transform: translateY(30px);
+
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+
+        }
+
+        
+
+        .fade-in.visible {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+        
+
+        .underline-link {
+
+            position: relative;
+
+            text-decoration: none;
+
+            color: #e5e5e5;
+
+            font-size: 0.875rem;
+
+            letter-spacing: 0.1em;
+
+            text-transform: uppercase;
+
+        }
+
+        
+
+        .underline-link::after {
+
+            content: '';
+
+            position: absolute;
+
+            bottom: -4px;
+
+            left: 0;
+
+            width: 0;
+
+            height: 1px;
+
+            background-color: #d4af37;
+
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+        }
+
+        
+
+        .underline-link:hover::after {
+
+            width: 100%;
+
+        }
+
+        
+
+        .service-card {
+
+            border-right: 1px solid rgba(229, 229, 229, 0.1);
+
+            padding: 3rem 2rem;
+
+            transition: background-color 0.4s ease;
+
+        }
+
+        
+
+        .service-card:last-child {
+
+            border-right: none;
+
+        }
+
+        
+
+        .service-card:hover {
+
+            background-color: rgba(229, 229, 229, 0.02);
+
+        }
+
+        
+
+        .logo-text {
+
+            font-family: 'Playfair Display', serif;
+
+            font-size: 1.5rem;
+
+            font-weight: 300;
+
+            letter-spacing: 0.15em;
+
+        }
+
+
+
+        input, textarea {
+
+            font-family: 'Inter', sans-serif;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 bg-gradient-to-b from-[#0a0a0a] to-transparent">
+
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+            <div class="logo-text">KESSY YAKO</div>
+
+            <div class="flex gap-8">
+
+                <a href="#services" class="underline-link">Služby</a>
+
+                <a href="#contact" class="underline-link">Kontakt</a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- Hero Section - AI Generator -->
+
+    <section class="min-h-screen flex items-center justify-center px-8 pt-32 pb-20">
+
+        <div class="max-w-4xl mx-auto w-full">
+
+            <div class="text-center mb-16 fade-in">
+
+                <h1 class="text-5xl md:text-7xl mb-6 leading-tight tracking-tight">
+
+                    Vytvořte si perfektní<br>motivační dopis pomocí AI
+
+                </h1>
+
+                <p class="text-lg md:text-xl font-light opacity-70 tracking-wide">
+
+                    Nahrájte své CV a inzerát práce. AI vytvoří profesionální dopis za vás.
+
+                </p>
+
+            </div>
+
+            
+
+            <div class="space-y-6 fade-in">
+
+                <!-- Job Ad Input -->
+
+                <div>
+
+                    <label class="block mb-3 text-sm uppercase tracking-wider opacity-70">
+
+                        Text inzerátu práce
+
+                    </label>
+
+                    <textarea 
+
+                        id="jobAdInput"
+
+                        rows="5"
+
+                        placeholder="Vložte text pracovní nabídky..."
+
+                        class="w-full bg-[#111111] border border-[#e5e5e5] border-opacity-20 rounded-none px-6 py-4 text-[#e5e5e5] font-light focus:outline-none focus:border-[#d4af37] focus:border-opacity-50 transition-colors resize-none"
+
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- CV Upload -->
+
+                <div>
+
+                    <label class="block mb-3 text-sm uppercase tracking-wider opacity-70">
+
+                        Vaše CV
+
+                    </label>
+
+                    <div class="relative">
+
+                        <input 
+
+                            type="file" 
+
+                            id="cvUpload" 
+
+                            accept=".pdf"
+
+                            class="hidden"
+
+                        >
+
+                        <button 
+
+                            onclick="document.getElementById('cvUpload').click()"
+
+                            class="w-full bg-[#111111] border border-[#e5e5e5] border-opacity-20 px-6 py-4 text-left font-light hover:border-opacity-40 transition-colors flex items-center justify-between"
+
+                        >
+
+                            <span id="cvFileName" class="opacity-70">Nahrát CV (PDF)</span>
+
+                            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Generate Button -->
+
+                <button 
+
+                    onclick="generateCoverLetter()"
+
+                    class="w-full bg-[#d4af37] bg-opacity-10 border border-[#d4af37] border-opacity-30 px-8 py-6 text-[#d4af37] font-light uppercase tracking-widest text-sm hover:bg-opacity-20 transition-all duration-300"
+
+                >
+
+                    Generovat motivační dopis
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Services Section -->
+
+    <section id="services" class="py-32 px-8 border-t border-[#e5e5e5] border-opacity-10">
+
+        <div class="max-w-7xl mx-auto">
+
+            <h2 class="text-4xl md:text-5xl text-center mb-8 fade-in">
+
+                Chcete vlastní web nebo AI aplikaci?
+
+            </h2>
+
+            <p class="text-center mb-20 font-light text-lg opacity-70 fade-in max-w-2xl mx-auto">
+
+                Vytvářím digitální produkty na míru – od elegantních webů po pokročilé AI nástroje.
+
+            </p>
+
+            
+
+            <div class="grid grid-cols-1 md:grid-cols-3 fade-in">
+
+                <!-- Service 1 -->
+
+                <div class="service-card">
+
+                    <h3 class="text-2xl md:text-3xl mb-6">Webdesign & UI</h3>
+
+                    <p class="font-light leading-relaxed opacity-70">
+
+                        Vizuální identita
+
+                    </p>
+
+                    <p class="mt-4 font-light text-sm leading-relaxed opacity-60">
+
+                        Vytváříme digitální zážitky, které oslovují a zanechávají trvalý dojem.
+
+                    </p>
+
+                </div>
+
+                
+
+                <!-- Service 2 -->
+
+                <div class="service-card">
+
+                    <h3 class="text-2xl md:text-3xl mb-6">Development</h3>
+
+                    <p class="font-light leading-relaxed opacity-70">
+
+                        Technická preciznost
+
+                    </p>
+
+                    <p class="mt-4 font-light text-sm leading-relaxed opacity-60">
+
+                        Stavíme na solidních základech s důrazem na výkon a škálovatelnost.
+
+                    </p>
+
+                </div>
+
+                
+
+                <!-- Service 3 -->
+
+                <div class="service-card">
+
+                    <h3 class="text-2xl md:text-3xl mb-6">AI Aplikace</h3>
+
+                    <p class="font-light leading-relaxed opacity-70">
+
+                        Automatizace procesů
+
+                    </p>
+
+                    <p class="mt-4 font-light text-sm leading-relaxed opacity-60">
+
+                        Integrujeme umělou inteligenci do vašeho podnikání pro efektivnější workflow.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Contact Form Section -->
+
+    <section id="contact" class="py-32 px-8 border-t border-[#e5e5e5] border-opacity-10">
+
+        <div class="max-w-3xl mx-auto">
+
+            <h2 class="text-4xl md:text-5xl text-center mb-8 fade-in">
+
+                Napište mi o spolupráci
+
+            </h2>
+
+            <p class="text-center mb-16 font-light opacity-70 fade-in">
+
+                Pojďme společně vytvořit něco výjimečného.
+
+            </p>
+
+            
+
+            <form action="https://formspree.io/f/mpwvwwbj" method="POST" class="space-y-6 fade-in">
+
+                <!-- Name -->
+
+                <div>
+
+                    <label class="block mb-3 text-sm uppercase tracking-wider opacity-70">
+
+                        Jméno
+
+                    </label>
+
+                    <input 
+
+                        type="text" 
+
+                        name="name"
+
+                        required
+
+                        placeholder="Vaše jméno"
+
+                        class="w-full bg-[#111111] border border-[#e5e5e5] border-opacity-20 rounded-none px-6 py-4 text-[#e5e5e5] font-light focus:outline-none focus:border-[#d4af37] focus:border-opacity-50 transition-colors"
+
+                    >
+
+                </div>
+
+
+
+                <!-- Email -->
+
+                <div>
+
+                    <label class="block mb-3 text-sm uppercase tracking-wider opacity-70">
+
+                        Email
+
+                    </label>
+
+                    <input 
+
+                        type="email" 
+
+                        name="email"
+
+                        required
+
+                        placeholder="vas@email.cz"
+
+                        class="w-full bg-[#111111] border border-[#e5e5e5] border-opacity-20 rounded-none px-6 py-4 text-[#e5e5e5] font-light focus:outline-none focus:border-[#d4af37] focus:border-opacity-50 transition-colors"
+
+                    >
+
+                </div>
+
+
+
+                <!-- Message -->
+
+                <div>
+
+                    <label class="block mb-3 text-sm uppercase tracking-wider opacity-70">
+
+                        Zpráva
+
+                    </label>
+
+                    <textarea 
+
+                        name="message"
+
+                        rows="6"
+
+                        required
+
+                        placeholder="Popište mi váš projekt nebo dotaz..."
+
+                        class="w-full bg-[#111111] border border-[#e5e5e5] border-opacity-20 rounded-none px-6 py-4 text-[#e5e5e5] font-light focus:outline-none focus:border-[#d4af37] focus:border-opacity-50 transition-colors resize-none"
+
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- Submit Button -->
+
+                <button 
+
+                    type="submit"
+
+                    class="w-full bg-[#d4af37] bg-opacity-10 border border-[#d4af37] border-opacity-30 px-8 py-5 text-[#d4af37] font-light uppercase tracking-widest text-sm hover:bg-opacity-20 transition-all duration-300"
+
+                >
+
+                    Odeslat zprávu
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Footer -->
+
+    <footer class="py-24 px-8 border-t border-[#e5e5e5] border-opacity-10">
+
+        <div class="max-w-7xl mx-auto text-center fade-in">
+
+            <div class="text-6xl md:text-8xl mb-12 font-light" style="font-family: 'Playfair Display', serif;">
+
+                KY
+
+            </div>
+
+            <a href="mailto:kessyyakostudios@gmail.com" class="text-lg md:text-xl underline-link inline-block">
+
+                kessyyakostudios@gmail.com
+
+            </a>
+
+            <p class="mt-12 text-sm opacity-50 font-light">
+
+                © 2025 Kessy Yako Studio. All rights reserved.
+
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- Modal for Generated Cover Letter -->
+
+    <div id="coverLetterModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center px-8">
+
+        <div class="bg-[#111111] border border-[#e5e5e5] border-opacity-20 max-w-3xl w-full max-h-[80vh] overflow-y-auto p-12 relative">
+
+            <button 
+
+                onclick="closeModal()"
+
+                class="absolute top-6 right-6 text-[#e5e5e5] opacity-50 hover:opacity-100 transition-opacity"
+
+            >
+
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+
+                </svg>
+
+            </button>
+
+            
+
+            <h3 class="text-3xl mb-8 font-light">Váš motivační dopis</h3>
+
+            <div id="coverLetterContent" class="font-light leading-relaxed space-y-4 opacity-90"></div>
+
+            
+
+            <button 
+
+                onclick="copyCoverLetter()"
+
+                class="mt-8 w-full bg-[#d4af37] bg-opacity-10 border border-[#d4af37] border-opacity-30 px-8 py-4 text-[#d4af37] font-light uppercase tracking-widest text-sm hover:bg-opacity-20 transition-all duration-300"
+
+            >
+
+                Zkopírovat text
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        // Fade-in animation on scroll
+
+        const observerOptions = {
+
+            threshold: 0.15,
+
+            rootMargin: '0px 0px -50px 0px'
+
+        };
+
+
+
+        const observer = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add('visible');
+
+                }
+
+            });
+
+        }, observerOptions);
+
+
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+
+            observer.observe(el);
+
+        });
+
+
+
+        // Initial fade-in for hero
+
+        setTimeout(() => {
+
+            const firstFadeIn = document.querySelector('.fade-in');
+
+            if (firstFadeIn) firstFadeIn.classList.add('visible');
+
+        }, 300);
+
+
+
+        // CV Upload file name display
+
+        document.getElementById('cvUpload').addEventListener('change', function(e) {
+
+            const fileName = e.target.files[0]?.name || 'Nahrát CV (PDF)';
+
+            document.getElementById('cvFileName').textContent = fileName;
+
+        });
+
+
+
+        // Generate Cover Letter (Mock function)
+
+        function generateCoverLetter() {
+
+            const jobAd = document.getElementById('jobAdInput').value;
+
+            const cvFile = document.getElementById('cvUpload').files[0];
+
+
+
+            if (!jobAd.trim()) {
+
+                alert('Prosím, vložte text inzerátu práce.');
+
+                return;
+
+            }
+
+
+
+            if (!cvFile) {
+
+                alert('Prosím, nahrajte své CV.');
+
+                return;
+
+            }
+
+
+
+            // Mock generated cover letter
+
+            const mockCoverLetter = `
+
+                <p class="mb-4">Vážená paní / Vážený pane,</p>
+
+                
+
+                <p class="mb-4">s velkým zájmem reaguji na Vaši nabídku pracovní pozice. S více než pětiletými zkušenostmi v oboru a prokázanými výsledky jsem přesvědčen(a), že bych mohl(a) být přínosem pro Váš tým.</p>
+
+                
+
+                <p class="mb-4">Během své kariéry jsem se specializoval(a) na strategický rozvoj digitálních projektů a vedení cross-funkčních týmů. Mé zkušenosti zahrnují úspěšnou realizaci komplexních projektů, které vedly ke zvýšení efektivity o 35% a významně zlepšily uživatelskou zkušenost.</p>
+
+                
+
+                <p class="mb-4">Vaše společnost mě zaujala především svým inovativním přístupem a hodnotami, které rezonují s mým profesionálním zaměřením. Věřím, že moje analytické myšlení, schopnost strategického plánování a proaktivní přístup by mohly přispět k dalšímu růstu a úspěchu Vašeho týmu.</p>
+
+                
+
+                <p class="mb-4">Těším se na možnost osobního setkání, kde bych rád(a) podrobněji představil(a) své zkušenosti a prodiskutoval(a), jak bych mohl(a) přispět k naplnění Vašich cílů.</p>
+
+                
+
+                <p class="mb-4">S pozdravem,<br>[Vaše jméno]</p>
+
+            `;
+
+
+
+            document.getElementById('coverLetterContent').innerHTML = mockCoverLetter;
+
+            document.getElementById('coverLetterModal').classList.remove('hidden');
+
+        }
+
+
+
+        // Close modal
+
+        function closeModal() {
+
+            document.getElementById('coverLetterModal').classList.add('hidden');
+
+        }
+
+
+
+        // Copy cover letter to clipboard
+
+        function copyCoverLetter() {
+
+            const content = document.getElementById('coverLetterContent').innerText;
+
+            navigator.clipboard.writeText(content).then(() => {
+
+                const btn = event.target;
+
+                const originalText = btn.textContent;
+
+                btn.textContent = 'Zkopírováno!';
+
+                setTimeout(() => {
+
+                    btn.textContent = originalText;
+
+                }, 2000);
+
+            });
+
+        }
+
+
+
+        // Close modal on escape key
+
+        document.addEventListener('keydown', function(e) {
+
+            if (e.key === 'Escape') {
+
+                closeModal();
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
