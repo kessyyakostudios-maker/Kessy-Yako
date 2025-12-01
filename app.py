@@ -2,27 +2,19 @@ import streamlit as st
 import google.generativeai as genai
 from pypdf import PdfReader
 
-# --- KONFIGURACE STRÁNKY ---
-st.set_page_config(
-    page_title="Kessy Yako Studio",
-    page_icon="✨",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# --- KONFIGURACE ---
+st.set_page_config(page_title="Kessy Yako Studio", page_icon="✨", layout="wide", initial_sidebar_state="collapsed")
 
-# --- CSS STYLY (DESIGN) ---
+# --- CSS DESIGN (LUXUSNÍ) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
 
-    /* 1. POZADÍ (Jemný Mesh Gradient - vypadá lépe než kruh) */
+    /* 1. POZADÍ A ZÁKLAD */
     .stApp {
-        background-color: #000000;
-        background-image: 
-            radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-            radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%), 
-            radial-gradient(at 100% 0%, hsla(339,49%,30%,0.3) 0, transparent 50%);
+        background-color: #050505;
+        background-image: radial-gradient(at 50% 0%, #1a1a1a 0%, #000000 70%);
         color: #e0e0e0;
     }
 
@@ -30,61 +22,58 @@ st.markdown("""
     h1, h2, h3 {
         font-family: 'Playfair Display', serif !important;
         color: #ffffff !important;
-        text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+        letter-spacing: 1px;
     }
-    p, label, div, span {
-        font-family: 'Montserrat', sans-serif;
+    p, label, div, span, li {
+        font-family: 'Montserrat', sans-serif !important;
         color: #cccccc;
+        font-weight: 300;
     }
 
-    /* 3. TLAČÍTKA (ČERNÝ TEXT NA STŘÍBRNÉ) - OPRAVA ČITELNOSTI */
+    /* 3. VYSKAKOVACÍ OKNA (MODALS) - TMAVÉ POZADÍ */
+    div[data-testid="stDialog"] {
+        background-color: #111111 !important;
+        border: 1px solid #333;
+    }
+    div[data-testid="stDialog"] h1, div[data-testid="stDialog"] h2, div[data-testid="stDialog"] h3 {
+        color: #fff !important;
+    }
+    div[data-testid="stDialog"] p, div[data-testid="stDialog"] li {
+        color: #ccc !important;
+    }
+
+    /* 4. TLAČÍTKA (ČITELNÁ) */
     .stButton > button {
-        background: linear-gradient(180deg, #f0f0f0 0%, #aaaaaa 100%) !important;
-        color: #000000 !important; /* ČERNÁ BARVA PÍSMA NATVRDO */
-        font-weight: 900 !important;
-        border: none !important;
-        border-radius: 4px !important;
+        background: white !important;
+        color: black !important;
+        font-family: 'Montserrat', sans-serif !important;
+        font-weight: 700 !important;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5) !important;
-        padding: 0.8rem 1rem !important;
+        letter-spacing: 2px;
+        border-radius: 0px !important; /* Hranaté luxusní */
+        border: none !important;
+        padding: 1rem 2rem !important;
+        transition: all 0.3s ease;
     }
     .stButton > button:hover {
-        background: white !important;
+        background: #d4af37 !important; /* Zlatá při hoveru */
+        color: white !important;
         transform: scale(1.02);
-        box-shadow: 0 6px 15px rgba(255,255,255,0.2) !important;
-    }
-    
-    /* Styl pro st.link_button a dialog buttony */
-    button[kind="primary"], button[kind="secondary"] {
-        color: black !important;
     }
 
-    /* 4. VYSKAKOVACÍ OKNA (MODALS) - ABY BYL VIDĚT TEXT */
-    div[role="dialog"] {
-        background-color: #1a1a1a !important;
-        border: 1px solid #333;
-        color: white !important;
-    }
-    div[role="dialog"] h1, div[role="dialog"] h2, div[role="dialog"] p {
-        color: white !important;
-    }
-
-    /* 5. INPUTY (VELKÉ A MODERNÍ) */
+    /* 5. INPUTY */
     .stTextInput > div > div > input, .stTextArea > div > div > textarea {
         background-color: #0a0a0a !important;
+        border: 1px solid #333 !important;
         color: white !important;
-        border: 1px solid #444 !important;
-        font-size: 1.1rem;
+        font-family: 'Montserrat', sans-serif;
     }
-    .stTextInput > div > div > input:focus, .stTextArea > div > div > textarea:focus {
-        border-color: #ffffff !important;
+    .stTextInput > div > div > input:focus {
+        border-color: #d4af37 !important;
     }
 
-    /* 6. SCHOVAT STREAMLIT PRVKY */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
+    /* SKRYTÍ */
+    #MainMenu, footer, header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -99,98 +88,125 @@ def get_pdf_text(pdf_file):
     reader = PdfReader(pdf_file)
     return "".join([p.extract_text() for p in reader.pages])
 
-# --- DIALOGY (Portfolio) ---
-@st.dialog("Webdesign & UI")
+# --- MODALY (BOHATÝ OBSAH) ---
+
+@st.dialog("WEBDESIGN & UI")
 def show_web():
-    st.markdown("## Luxusní weby, které prodávají")
-    st.write("Vytváříme design, který podtrhne vaši značku.")
-    st.image("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop")
-    st.info("Specializace: Dark Mode Design, Minimalismus, Animace.")
+    st.markdown("### Design, který prodává")
+    st.write("Specializujeme se na 'High-End' vizuál. Vaše konkurence bude vypadat levně.")
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        st.image("https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop", caption="Weby pro hotely a restaurace")
+    with c2:
+        st.image("https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2000&auto=format&fit=crop", caption="E-commerce pro módu")
+    
+    st.markdown("#### Co dostanete:")
+    st.markdown("""
+    * **Psychologie barev:** Vybíráme tóny, které vzbuzují důvěru.
+    * **Dark Mode:** Specializujeme se na tmavé, prémiové rozhraní.
+    * **Animace:** Web se musí hýbat, ale nesmí rušit.
+    """)
 
-@st.dialog("Development")
+@st.dialog("DEVELOPMENT")
 def show_dev():
-    st.markdown("## Systémy na míru")
-    st.write("E-shopy, klientské portály a automatizace.")
-    st.code("print('Code that works.')", language="python")
-    st.success("Technologie: Python, React, AI Integrace.")
+    st.markdown("### Robustní systémy na míru")
+    st.write("Nestačí vám krabicové řešení? Stavíme systémy, které rostou s vámi.")
+    
+    st.success("🚀 **E-shop na míru:** Zvládne 10 000 objednávek denně.")
+    st.info("🔒 **Klientské portály:** Bezpečné zóny pro vaše zákazníky.")
+    st.warning("⚡ **Rychlost:** Optimalizujeme kód pro načtení do 0.5s.")
 
-@st.dialog("AI Aplikace")
+    st.image("https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2000&auto=format&fit=crop", caption="Backend Dashboard")
+
+@st.dialog("AI AUDIT ZDARMA")
 def show_ai():
-    st.markdown("## Umělá inteligence v praxi")
-    st.write("Tohle, co právě používáte, je jen začátek.")
-    st.write("Umíme naučit AI číst vaše smlouvy, odpovídat zákazníkům nebo analyzovat data.")
+    st.markdown("### 🤖 Získejte okamžitou AI analýzu")
+    st.write("Zadejte popis vašeho byznysu a AI vám hned teď poradí 3 věci, jak vydělat víc.")
+    
+    biz_desc = st.text_area("Co děláte? (Např. Prodávám kávu, Učím angličtinu...)", height=100)
+    
+    if st.button("ANALYZOVAT MŮJ BYZNYS"):
+        if biz_desc:
+            with st.spinner("AI přemýšlí..."):
+                try:
+                    models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+                    model = genai.GenerativeModel(next((m for m in models if 'flash' in m), models[0]))
+                    response = model.generate_content(f"Jsi byznys konzultant. Uživatel dělá: {biz_desc}. Napiš 3 konkrétní, krátké body, jak může využít AI nebo zlepšit web, aby víc vydělal. Buď stručný.")
+                    st.markdown(f"<div style='background:#111; padding:20px; border:1px solid #d4af37;'>{response.text}</div>", unsafe_allow_html=True)
+                except:
+                    st.error("Chyba AI.")
+        else:
+            st.warning("Napište něco o sobě.")
 
 # --- OBSAH WEBU ---
 
-# 1. LOGO A HLAVIČKA
-st.markdown("<h1 style='text-align: center; font-size: 4rem; letter-spacing: 5px; margin-top: 2rem;'>KESSY YAKO</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; letter-spacing: 2px; margin-bottom: 5rem; opacity: 0.7;'>DIGITAL STUDIO & AI LAB</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-size: 5rem; margin-top: 2rem;'>KESSY YAKO</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; letter-spacing: 3px; font-size: 1.2rem; margin-bottom: 5rem;'>DIGITAL STUDIO & AI LAB</p>", unsafe_allow_html=True)
 
-# 2. HERO SEKCE (AI NÁSTROJ - VELKÝ)
-st.markdown("### ⚡ AI Kariérní Architekt")
-st.markdown("Neztrácejte čas psaním. Vložte inzerát, nahrajte CV a nechte AI pracovat.")
+# 1. AI NÁSTROJ (HERO)
+st.markdown("### ⚡ Generátor Motivačních Dopisů")
+st.write("Ušetřete hodiny psaní. Vložte inzerát, nahrajte CV a získejte text, který vám otevře dveře.")
 
-# Rozložení - Žádné sloupce pro inputy, ať je to obrovské
-job_ad = st.text_area("1. TEXT INZERÁTU (Zkopírujte sem celou nabídku práce)", height=250)
-uploaded_file = st.file_uploader("2. VAŠE CV (PDF)", type="pdf")
+col_in1, col_in2 = st.columns([1, 1])
+with col_in1:
+    job = st.text_area("TEXT INZERÁTU", height=200, placeholder="Zkopírujte sem nabídku práce...")
+with col_in2:
+    cv = st.file_uploader("VAŠE CV (PDF)", type="pdf")
+    st.write("")
+    st.write("💡 *Tip: AI analyzuje klíčová slova z inzerátu.*")
 
-# Obrovské tlačítko přes celou šířku
-st.markdown("<br>", unsafe_allow_html=True)
-if st.button("✨ VYGENEROVAT MOTIVAČNÍ DOPIS ✨", use_container_width=True):
-    if job_ad and uploaded_file:
-        with st.spinner("Analyzuji profil a píšu text..."):
+if st.button("✨ VYGENEROVAT DOPIS", use_container_width=True):
+    if job and cv:
+        with st.spinner("Generuji..."):
             try:
-                text = get_pdf_text(uploaded_file)
+                txt = get_pdf_text(cv)
                 models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
                 model = genai.GenerativeModel(next((m for m in models if 'flash' in m), models[0]))
-                
-                response = model.generate_content(f"Napiš skvělý motivační dopis česky. Inzerát: {job_ad}. CV data: {text}")
-                
+                res = model.generate_content(f"Napiš motivační dopis česky. Inzerát: {job}. CV: {txt}")
                 st.balloons()
-                st.markdown("### 📄 Váš výsledek")
-                st.markdown(f"<div style='background: #111; padding: 2rem; border-radius: 10px; border: 1px solid #333;'>{response.text}</div>", unsafe_allow_html=True)
-                st.download_button("STÁHNOUT TEXT", response.text, "dopis.txt")
+                st.markdown(f"<div style='background:#111; padding:30px; border-radius:10px; margin-top:20px;'>{res.text}</div>", unsafe_allow_html=True)
+                st.download_button("STÁHNOUT", res.text, "dopis.txt")
             except Exception as e:
                 st.error(f"Chyba: {e}")
     else:
-        st.warning("Vyplňte prosím obě pole výše.")
+        st.warning("Vyplňte obě pole.")
 
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-# 3. SEKCE SLUŽBY (3 KARTY)
-st.markdown("<h2 style='text-align: center; margin-bottom: 3rem;'>Naše další projekty</h2>", unsafe_allow_html=True)
+# 2. SLUŽBY
+st.markdown("<h2 style='text-align: center; margin-bottom: 3rem;'>Co pro vás můžeme vytvořit?</h2>", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3)
+c1, c2, c3 = st.columns(3)
 
-with col1:
+with c1:
+    st.image("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop")
     st.markdown("#### Webdesign & UI")
-    st.write("Estetika, která prodává. Weby pro prémiové značky.")
-    if st.button("UKÁZAT PRÁCE", key="btn1"):
-        show_web()
+    st.write("Luxusní weby, které budují důvěru. Žádné šablony, čistý design na míru.")
+    if st.button("UKÁZAT DESIGNY", key="b1"): show_web()
 
-with col2:
+with c2:
+    st.image("https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2000&auto=format&fit=crop")
     st.markdown("#### Development")
-    st.write("Robustní systémy a e-shopy na míru.")
-    if st.button("UKÁZAT SYSTÉMY", key="btn2"):
-        show_dev()
+    st.write("Stavíme robustní systémy. Od e-shopů po interní firemní aplikace.")
+    if st.button("UKÁZAT SYSTÉMY", key="b2"): show_dev()
 
-with col3:
-    st.markdown("#### AI Aplikace")
-    st.write("Automatizace a nástroje nové generace.")
-    if st.button("UKÁZAT AI", key="btn3"):
-        show_ai()
+with c3:
+    st.image("https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1932&auto=format&fit=crop")
+    st.markdown("#### AI Řešení")
+    st.write("Automatizace, která šetří peníze. Zkuste si naši AI analýzu zdarma.")
+    if st.button("VYZKOUŠET AI", key="b3"): show_ai()
 
 st.markdown("<br><br><hr style='border-color: #333;'><br>", unsafe_allow_html=True)
 
-# 4. KONTAKT
-st.markdown("<h2 style='text-align: center;'>Spolupráce</h2>", unsafe_allow_html=True)
-
+# 3. KONTAKT
+st.markdown("<h2 style='text-align: center;'>Napište nám</h2>", unsafe_allow_html=True)
 contact_form = """
 <form action="https://formspree.io/f/mpwvwwbj" method="POST" style="max-width: 600px; margin: 0 auto;">
-    <input type="email" name="email" required placeholder="Váš email" style="width: 100%; padding: 15px; margin-bottom: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 5px;">
-    <textarea name="message" rows="4" required placeholder="Jak vám můžeme pomoci?" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #111; border: 1px solid #333; color: white; border-radius: 5px;"></textarea>
-    <button type="submit" style="width: 100%; padding: 15px; background: #e0e0e0; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer;">ODESLAT</button>
+    <input type="email" name="email" placeholder="Váš email" style="width: 100%; padding: 15px; margin-bottom: 10px; background: #0a0a0a; border: 1px solid #333; color: white;">
+    <textarea name="message" rows="4" placeholder="Váš projekt..." style="width: 100%; padding: 15px; margin-bottom: 20px; background: #0a0a0a; border: 1px solid #333; color: white;"></textarea>
+    <button type="submit" style="width: 100%; padding: 15px; background: white; color: black; font-weight: bold; border: none; cursor: pointer;">ODESLAT</button>
 </form>
 """
 st.markdown(contact_form, unsafe_allow_html=True)
-st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<br><br><h1 style='text-align: center; opacity: 0.2; font-size: 2rem;'>KY</h1>", unsafe_allow_html=True)
