@@ -53,25 +53,26 @@ st.markdown("""
         /* Input fields */
         .stTextInput > div > div > input,
         .stTextArea > div > div > textarea {
-            background-color: #111111;
+            background-color: #1a1a1a;
             color: #e5e5e5;
-            border: 1px solid rgba(229, 229, 229, 0.2);
+            border: 1px solid rgba(224, 224, 224, 0.3);
             border-radius: 0;
         }
         
         .stTextInput > div > div > input:focus,
         .stTextArea > div > div > textarea:focus {
-            border-color: #d4af37;
-            border-opacity: 0.5;
+            border-color: #E0E0E0;
+            box-shadow: none;
+            outline: none;
         }
         
         /* Buttons */
         .stButton > button {
-            background-color: rgba(212, 175, 55, 0.1);
-            color: #d4af37;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            background-color: #E0E0E0;
+            color: #000000;
+            border: none;
             border-radius: 0;
-            font-weight: 300;
+            font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             padding: 0.75rem 2rem;
@@ -79,8 +80,14 @@ st.markdown("""
         }
         
         .stButton > button:hover {
-            background-color: rgba(212, 175, 55, 0.2);
-            border-color: #d4af37;
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        
+        .stButton > button:focus,
+        .stButton > button:active {
+            outline: none;
+            box-shadow: none;
         }
         
         /* File uploader */
@@ -116,6 +123,19 @@ st.markdown("""
             border-top: 1px solid rgba(229, 229, 229, 0.1);
             padding-top: 3rem;
             margin-top: 3rem;
+        }
+        
+        /* Hide Streamlit branding / controls */
+        footer {
+            visibility: hidden;
+        }
+        
+        #MainMenu {
+            visibility: hidden;
+        }
+        
+        .stDeployButton {
+            display: none;
         }
     </style>
 """, unsafe_allow_html=True)
