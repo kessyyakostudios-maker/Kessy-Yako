@@ -5,13 +5,13 @@ from pypdf import PdfReader
 # --- KONFIGURACE ---
 st.set_page_config(page_title="Kessy Yako Studio", page_icon="✨", layout="wide", initial_sidebar_state="collapsed")
 
-# --- CSS DESIGN (FINÁLNÍ FIX) ---
+# --- CSS DESIGN ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
-    /* 1. ZÁKLAD STRÁNKY A POZADÍ */
+    /* 1. ZÁKLAD */
     .stApp {
         background-color: #050505;
         background-image: radial-gradient(at 50% 0%, #1a1a1a 0%, #000000 80%);
@@ -19,114 +19,90 @@ st.markdown("""
         font-family: 'Montserrat', sans-serif;
     }
     
-    /* 2. ODSTRANĚNÍ SVĚTLÉ LIŠTY NAHOŘE (KLÍČOVÉ) */
-    header {
-        visibility: hidden !important;
-        background-color: transparent !important;
-    }
-    div[data-testid="stDecoration"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* Posunutí obsahu úplně nahoru */
+    /* Reset paddingu */
     .main .block-container {
         padding-top: 0 !important;
+        padding-bottom: 0 !important;
         max-width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
-    /* 3. HERO SEKCE */
-    .hero-container {
-        height: 100vh;
+    /* 2. FULL-SCREEN SEKCE */
+    .section-container {
+        min-height: 100vh;
         width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
-        background: transparent; /* Průhledné, aby byl vidět gradient stApp */
+        padding: 4rem 2rem;
     }
-    
+
+    /* HERO */
     .hero-title {
         font-family: 'Playfair Display', serif !important;
         font-size: 5vw !important;
-        font-weight: 700;
         color: #ffffff !important;
         letter-spacing: 2px;
         margin: 0;
         text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        text-align: center;
     }
     
     .hero-subtitle {
         font-family: 'Montserrat', sans-serif !important;
         font-size: 1.5rem !important;
-        font-weight: 400;
         color: #888888 !important;
-        letter-spacing: 8px;
+        letter-spacing: 5px;
         text-transform: uppercase;
         margin-top: 1rem;
+        text-align: center;
     }
 
-    /* Šipka dolů */
-    .scroll-down {
-        margin-top: 6rem;
-        animation: bounce 2s infinite;
-        opacity: 0.5;
-        font-size: 2rem;
-        color: white;
-    }
-    
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-10px);}
-        60% {transform: translateY(-5px);}
+    /* NADPISY SEKCÍ */
+    .section-title {
+        font-family: 'Playfair Display', serif !important;
+        font-size: 3rem !important;
+        color: #ffffff !important;
+        margin-bottom: 3rem;
+        text-align: center;
     }
 
-    /* 4. TLAČÍTKA (Sytě černý text) */
+    /* KARTY SLUŽEB (STEJNÁ VÝŠKA) */
+    div[data-testid="column"] {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        height: 100%;
+    }
+
+    /* TLAČÍTKA */
     .stButton > button {
-        background: #e0e0e0 !important; /* Stříbrná */
-        color: #000000 !important;      /* ČERNÁ */
-        font-family: 'Montserrat', sans-serif !important;
-        font-weight: 900 !important;    /* EXTRA TUČNÉ */
-        border: none !important;
-        border-radius: 4px;
-        padding: 1rem 2rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    .stButton > button:hover {
-        background: #ffffff !important;
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(255,255,255,0.4);
-    }
-    
-    /* Styl pro tlačítka v dialogu */
-    div[role="dialog"] button {
+        background: #f0f0f0 !important;
         color: black !important;
         font-weight: bold !important;
+        border: none !important;
+        border-radius: 4px;
+        padding: 0.8rem 2rem;
+        width: 100%;
+    }
+    .stButton > button:hover {
+        background: white !important;
+        transform: scale(1.02);
     }
 
-    /* 5. VYSKAKOVACÍ OKNA (MODALS) - Tmavé */
-    div[data-testid="stDialog"] {
-        background-color: #111111 !important;
-        border: 1px solid #333;
-        color: white !important;
-    }
-
-    /* 6. INPUTY */
-    .stTextInput > div > div > input, .stTextArea > div > div > textarea {
-        background-color: #0a0a0a !important;
+    /* INPUTY */
+    .stTextArea textarea, .stTextInput input {
+        background-color: #111 !important;
         color: white !important;
         border: 1px solid #333 !important;
     }
-    .stTextInput > div > div > input:focus, .stTextArea > div > div > textarea:focus {
-        border-color: #ffffff !important;
-    }
 
-    /* Skrytí patičky */
-    footer {visibility: hidden !important;}
-    #MainMenu {visibility: hidden !important;}
+    /* SKRYTÍ */
+    #MainMenu, footer, header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -141,59 +117,75 @@ def get_pdf_text(pdf_file):
     reader = PdfReader(pdf_file)
     return "".join([p.extract_text() for p in reader.pages])
 
-# --- 1. HERO SEKCE (PŘES CELOU OBRAZOVKU) ---
+# --- 1. HERO SEKCE (Start) ---
 st.markdown("""
-    <div class="hero-container">
+    <div class="section-container" style="background: radial-gradient(circle at center, #111 0%, #000 100%);">
         <h1 class="hero-title">Kessy Yako Studio</h1>
         <p class="hero-subtitle">Web Design</p>
-        <div class="scroll-down">↓</div>
+        <div style="margin-top: 5rem; opacity: 0.5; font-size: 2rem;">↓</div>
     </div>
 """, unsafe_allow_html=True)
 
 
-# --- 2. OBSAH WEBU (ZOBRAZÍ SE PO SCROLLOVÁNÍ) ---
-with st.container():
-    # Odsazení, aby obsah nebyl hned pod herem
-    st.markdown('<div style="padding-top: 5rem;"></div>', unsafe_allow_html=True)
+# --- 2. AI KARIÉRNÍ NÁSTROJ (Full Screen) ---
+st.markdown('<div class="section-container">', unsafe_allow_html=True)
+st.markdown('<h2 class="section-title">AI Kariérní Nástroj</h2>', unsafe_allow_html=True)
 
-    # A) AI GENERÁTOR
-    st.markdown("<h2 style='text-align: center; font-family: Playfair Display; font-size: 2.5rem; margin-bottom: 2rem;'>AI Kariérní Nástroj</h2>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([1,1])
-    with col1:
-        job = st.text_area("INZERÁT", height=150, placeholder="Vložte text inzerátu...")
-    with col2:
-        cv = st.file_uploader("CV (PDF)", type="pdf")
-    
+col1, col2 = st.columns(2)
+with col1:
+    job = st.text_area("VLOŽTE INZERÁT", height=300, placeholder="Sem zkopírujte text inzerátu...")
+with col2:
+    cv = st.file_uploader("NAHRAJTE CV (PDF)", type="pdf")
+    st.info("💡 Tip: AI vytvoří dopis na míru vašim zkušenostem.")
+
+st.markdown("<br>", unsafe_allow_html=True)
+if st.button("✨ VYGENEROVAT PROFESIONÁLNÍ DOPIS", use_container_width=True):
+    if job and cv:
+        with st.spinner("Analyzuji..."):
+            try:
+                txt = get_pdf_text(cv)
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                res = model.generate_content(f"Napiš motivační dopis. Inzerát: {job}. CV: {txt}")
+                st.markdown(f"<div style='background:#111; padding:30px; border:1px solid #333;'>{res.text}</div>", unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"Chyba: {e}")
+st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- 3. SLUŽBY (3 KARTY) ---
+st.markdown('<div class="section-container" style="background: #080808;">', unsafe_allow_html=True)
+st.markdown('<h2 class="section-title">Co nabízíme</h2>', unsafe_allow_html=True)
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.markdown("### 🎨 Webdesign & UI")
+    st.write("Luxusní vizuální identita. Tvoříme weby, které budují důvěru a prodávají.")
     st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Tlačítko na střed
-    c_spacel, c_btn, c_spacer = st.columns([1,2,1])
-    with c_btn:
-        if st.button("✨ VYGENEROVAT DOPIS", use_container_width=True):
-            if job and cv:
-                with st.spinner("Pracuji..."):
-                    try:
-                        txt = get_pdf_text(cv)
-                        models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-                        model = genai.GenerativeModel(next((m for m in models if 'flash' in m), models[0]))
-                        res = model.generate_content(f"Napiš motivační dopis. Inzerát: {job}. CV: {txt}")
-                        st.markdown(f"<div style='background:#111; padding:20px; border:1px solid #333; margin-top: 20px;'>{res.text}</div>", unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(f"Chyba: {e}")
 
-    st.markdown("<br><br><hr style='border-color: #333;'><br>", unsafe_allow_html=True)
+with c2:
+    st.markdown("### 💻 Development")
+    st.write("Robustní systémy. E-shopy a aplikace na míru s důrazem na rychlost.")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # B) KONTAKT
-    st.markdown("<h2 style='text-align: center; font-family: Playfair Display; font-size: 2.5rem; margin-bottom: 2rem;'>Spolupráce</h2>", unsafe_allow_html=True)
-    
-    contact_form = """
-    <form action="https://formspree.io/f/mpwvwwbj" method="POST" style="max-width: 700px; margin: 0 auto;">
-        <input type="email" name="email" placeholder="Váš email" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #0a0a0a; border: 1px solid #333; color: white; font-family: sans-serif;">
-        <textarea name="message" rows="5" placeholder="Zpráva..." style="width: 100%; padding: 15px; margin-bottom: 25px; background: #0a0a0a; border: 1px solid #333; color: white; font-family: sans-serif;"></textarea>
-        <button type="submit" style="width: 100%; padding: 15px; background: #e0e0e0; color: black; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">ODESLAT</button>
-    </form>
-    """
-    st.markdown(contact_form, unsafe_allow_html=True)
-    
-    st.markdown("<br><br><br><br>", unsafe_allow_html=True)
+with c3:
+    st.markdown("### 🤖 AI Integrace")
+    st.write("Automatizace procesů. Zapojte umělou inteligenci do vašeho podnikání.")
+    st.markdown("<br>", unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- 4. KONTAKT ---
+st.markdown('<div class="section-container">', unsafe_allow_html=True)
+st.markdown('<h2 class="section-title">Spolupráce</h2>', unsafe_allow_html=True)
+
+contact_form = """
+<form action="https://formspree.io/f/mpwvwwbj" method="POST" style="width: 100%; max-width: 600px; margin: 0 auto;">
+    <input type="email" name="email" placeholder="Váš email" style="width: 100%; padding: 20px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: white; border-radius: 5px;">
+    <textarea name="message" rows="5" placeholder="Jak vám můžeme pomoci?" style="width: 100%; padding: 20px; margin-bottom: 25px; background: #111; border: 1px solid #333; color: white; border-radius: 5px;"></textarea>
+    <button type="submit" style="width: 100%; padding: 20px; background: white; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem;">ODESLAT POPTÁVKU</button>
+</form>
+"""
+st.markdown(contact_form, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
